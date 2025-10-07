@@ -25,6 +25,7 @@ nav ul {
     flex-wrap: wrap;
     gap: 1.5rem;
     justify-content: center;
+    align-items: center;
 }
 
 nav a {
@@ -36,6 +37,18 @@ nav a {
 
 nav a:hover {
     color: #3498db;
+}
+
+nav .social-links {
+    display: flex;
+    gap: 1rem;
+    margin-left: 1rem;
+    padding-left: 1rem;
+    border-left: 1px solid #34495e;
+}
+
+nav .social-links a {
+    font-size: 1.2rem;
 }
 
 /* Container */
