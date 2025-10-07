@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Add line breaks after sentences in your text">
+    <title>Line Breaks Tool - Text Toolbox</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="line-breaks.html">Line Breaks</a></li>
+            <li><a href="lowercase.html">Lowercase</a></li>
+            <li><a href="uppercase.html">Uppercase</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>📝 Line Breaks Tool</h1>
+            <p class="subtitle">Add line breaks after sentences in your text</p>
+        </header>
+
+        <div class="tool-interface">
+            <div class="tool-section">
+                <h2>Input Text</h2>
+                <textarea 
+                    id="inputText" 
+                    placeholder="Paste your text here. This tool will add line breaks after each sentence (periods, exclamation marks, and question marks)."
+                    aria-label="Input text"
+                ></textarea>
+            </div>
+
+            <div class="button-group">
+                <button id="processBtn" onclick="processText()">Add Line Breaks</button>
+                <button class="clear-btn" onclick="clearInput()">Clear Input</button>
+            </div>
+
+            <div class="tool-section mt-2">
+                <h2>Output</h2>
+                <div class="output-section">
+                    <pre id="output">Your formatted text will appear here...</pre>
+                </div>
+            </div>
+
+            <div class="button-group mt-1">
+                <button class="copy-btn" id="copyBtn" onclick="copyOutput()" disabled>Copy Output</button>
+                <button class="clear-btn" onclick="clearOutput()">Clear Output</button>
+            </div>
+        </div>
+
+        <footer>
+            <p>All processing happens in your browser. No data is sent to any server.</p>
+            <p>
+                <a href="https://github.com/rifaterdemsahin/text_toolbox" target="_blank" rel="noopener noreferrer">
+                    View on GitHub
+                </a>
+            </p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        const inputTextarea = document.getElementById('inputText');
+        const outputElement = document.getElementById('output');
+        const copyBtn = document.getElementById('copyBtn');
+
+        function processText() {
+            const inputText = inputTextarea.value;
+            
+            if (!inputText || inputText.trim() === '') {
+                showNotification('Please enter some text to process', 'error');
+                return;
+            }
+
+            const result = addLineBreaks(inputText);
+            outputElement.textContent = result;
+            copyBtn.disabled = false;
+            showNotification('Line breaks added successfully!', 'success');
+        }
+
+        function clearInput() {
+            clearTextarea(inputTextarea);
+        }
+
+        function clearOutput() {
+            outputElement.textContent = 'Your formatted text will appear here...';
+            copyBtn.disabled = true;
+        }
+
+        async function copyOutput() {
+            const text = outputElement.textContent;
+            
+            if (text === 'Your formatted text will appear here...') {
+                showNotification('Nothing to copy', 'error');
+                return;
+            }
+
+            const success = await copyToClipboard(text);
+            if (success) {
+                showNotification('Copied to clipboard!', 'success');
+            } else {
+                showNotification('Failed to copy to clipboard', 'error');
+            }
+        }
+
+        // Allow Enter key to process text
+        inputTextarea.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                processText();
+            }
+        });
+    </script>
+</body>
+</html>

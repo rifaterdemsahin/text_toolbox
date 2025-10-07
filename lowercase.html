@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Convert text to lowercase">
+    <title>Lowercase Converter - Text Toolbox</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="line-breaks.html">Line Breaks</a></li>
+            <li><a href="lowercase.html">Lowercase</a></li>
+            <li><a href="uppercase.html">Uppercase</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>🔡 Lowercase Converter</h1>
+            <p class="subtitle">Convert your text to lowercase</p>
+        </header>
+
+        <div class="tool-interface">
+            <div class="tool-section">
+                <h2>Input Text</h2>
+                <textarea 
+                    id="inputText" 
+                    placeholder="Paste your text here to convert it to lowercase..."
+                    aria-label="Input text"
+                ></textarea>
+            </div>
+
+            <div class="button-group">
+                <button id="convertBtn" onclick="convertText()">Convert to Lowercase</button>
+                <button class="clear-btn" onclick="clearInput()">Clear Input</button>
+            </div>
+
+            <div class="tool-section mt-2">
+                <h2>Output</h2>
+                <div class="output-section">
+                    <pre id="output">Your lowercase text will appear here...</pre>
+                </div>
+            </div>
+
+            <div class="button-group mt-1">
+                <button class="copy-btn" id="copyBtn" onclick="copyOutput()" disabled>Copy Output</button>
+                <button class="clear-btn" onclick="clearOutput()">Clear Output</button>
+            </div>
+        </div>
+
+        <footer>
+            <p>All processing happens in your browser. No data is sent to any server.</p>
+            <p>
+                <a href="https://github.com/rifaterdemsahin/text_toolbox" target="_blank" rel="noopener noreferrer">
+                    View on GitHub
+                </a>
+            </p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        const inputTextarea = document.getElementById('inputText');
+        const outputElement = document.getElementById('output');
+        const copyBtn = document.getElementById('copyBtn');
+
+        function convertText() {
+            const inputText = inputTextarea.value;
+            
+            if (!inputText || inputText.trim() === '') {
+                showNotification('Please enter some text to convert', 'error');
+                return;
+            }
+
+            const result = convertToLowercase(inputText);
+            outputElement.textContent = result;
+            copyBtn.disabled = false;
+            showNotification('Converted to lowercase!', 'success');
+        }
+
+        function clearInput() {
+            clearTextarea(inputTextarea);
+        }
+
+        function clearOutput() {
+            outputElement.textContent = 'Your lowercase text will appear here...';
+            copyBtn.disabled = true;
+        }
+
+        async function copyOutput() {
+            const text = outputElement.textContent;
+            
+            if (text === 'Your lowercase text will appear here...') {
+                showNotification('Nothing to copy', 'error');
+                return;
+            }
+
+            const success = await copyToClipboard(text);
+            if (success) {
+                showNotification('Copied to clipboard!', 'success');
+            } else {
+                showNotification('Failed to copy to clipboard', 'error');
+            }
+        }
+
+        // Allow Enter key to convert text
+        inputTextarea.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                convertText();
+            }
+        });
+    </script>
+</body>
+</html>
