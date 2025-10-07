@@ -155,3 +155,51 @@ function convertToLowercase(text) {
 function convertToUppercase(text) {
     return text.toUpperCase();
 }
+
+/**
+ * Encode text to Base64
+ * @param {string} text - The input text
+ * @returns {string} - Base64 encoded text
+ */
+function encodeBase64(text) {
+    try {
+        return btoa(unescape(encodeURIComponent(text)));
+    } catch (e) {
+        throw new Error('Failed to encode to Base64');
+    }
+}
+
+/**
+ * Decode Base64 to text
+ * @param {string} text - The Base64 encoded text
+ * @returns {string} - Decoded text
+ */
+function decodeBase64(text) {
+    try {
+        return decodeURIComponent(escape(atob(text)));
+    } catch (e) {
+        throw new Error('Invalid Base64 string');
+    }
+}
+
+/**
+ * Encode text for URL
+ * @param {string} text - The input text
+ * @returns {string} - URL encoded text
+ */
+function encodeURL(text) {
+    return encodeURIComponent(text);
+}
+
+/**
+ * Decode URL encoded text
+ * @param {string} text - The URL encoded text
+ * @returns {string} - Decoded text
+ */
+function decodeURL(text) {
+    try {
+        return decodeURIComponent(text);
+    } catch (e) {
+        throw new Error('Invalid URL encoded string');
+    }
+}

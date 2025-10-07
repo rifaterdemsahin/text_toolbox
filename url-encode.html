@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Add line breaks after sentences in your text">
-    <title>Line Breaks Tool - Text Toolbox</title>
+    <meta name="description" content="URL encoder and decoder">
+    <title>URL Encoder/Decoder - Text Toolbox</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -21,8 +21,8 @@
 
     <div class="container">
         <header>
-            <h1>📝 Line Breaks Tool</h1>
-            <p class="subtitle">Add line breaks after sentences in your text</p>
+            <h1>🔗 URL Encoder/Decoder</h1>
+            <p class="subtitle">Encode and decode URL strings</p>
         </header>
 
         <div class="tool-interface">
@@ -30,20 +30,21 @@
                 <h2>Input Text</h2>
                 <textarea 
                     id="inputText" 
-                    placeholder="Paste your text here. This tool will add line breaks after each sentence (periods, exclamation marks, and question marks)."
+                    placeholder="Enter text to encode or URL-encoded string to decode..."
                     aria-label="Input text"
                 ></textarea>
             </div>
 
             <div class="button-group">
-                <button id="processBtn" onclick="processText()">Add Line Breaks</button>
+                <button id="encodeBtn" onclick="encodeText()">Encode for URL</button>
+                <button id="decodeBtn" onclick="decodeText()">Decode from URL</button>
                 <button class="clear-btn" onclick="clearInput()">Clear Input</button>
             </div>
 
             <div class="tool-section mt-2">
                 <h2>Output</h2>
                 <div class="output-section">
-                    <pre id="output">Your formatted text will appear here...</pre>
+                    <pre id="output">Your result will appear here...</pre>
                 </div>
             </div>
 
@@ -51,6 +52,24 @@
                 <button class="copy-btn" id="copyBtn" onclick="copyOutput()" disabled>Copy Output</button>
                 <button class="clear-btn" onclick="clearOutput()">Clear Output</button>
             </div>
+        </div>
+
+        <div class="tool-interface mt-2">
+            <h3>ℹ️ What is URL Encoding?</h3>
+            <p>URL encoding (also called percent encoding) converts special characters into a format that can be safely used in URLs. For example:</p>
+            <ul>
+                <li>Spaces become <code>%20</code></li>
+                <li><code>&amp;</code> becomes <code>%26</code></li>
+                <li><code>=</code> becomes <code>%3D</code></li>
+                <li><code>@</code> becomes <code>%40</code></li>
+            </ul>
+            <p><strong>Common uses:</strong></p>
+            <ul>
+                <li>Creating query parameters in URLs</li>
+                <li>Passing special characters safely in web addresses</li>
+                <li>Building API requests</li>
+                <li>Sharing URLs with spaces or symbols</li>
+            </ul>
         </div>
 
         <footer>
@@ -69,18 +88,40 @@
         const outputElement = document.getElementById('output');
         const copyBtn = document.getElementById('copyBtn');
 
-        function processText() {
+        function encodeText() {
             const inputText = inputTextarea.value;
             
             if (!inputText || inputText.trim() === '') {
-                showNotification('Please enter some text to process', 'error');
+                showNotification('Please enter some text to encode', 'error');
                 return;
             }
 
-            const result = addLineBreaks(inputText);
-            outputElement.textContent = result;
-            copyBtn.disabled = false;
-            showNotification('Line breaks added successfully!', 'success');
+            try {
+                const result = encodeURL(inputText);
+                outputElement.textContent = result;
+                copyBtn.disabled = false;
+                showNotification('Encoded for URL successfully!', 'success');
+            } catch (error) {
+                showNotification(error.message, 'error');
+            }
+        }
+
+        function decodeText() {
+            const inputText = inputTextarea.value;
+            
+            if (!inputText || inputText.trim() === '') {
+                showNotification('Please enter URL-encoded text to decode', 'error');
+                return;
+            }
+
+            try {
+                const result = decodeURL(inputText);
+                outputElement.textContent = result;
+                copyBtn.disabled = false;
+                showNotification('Decoded from URL successfully!', 'success');
+            } catch (error) {
+                showNotification('Invalid URL-encoded string', 'error');
+            }
         }
 
         function clearInput() {
@@ -88,14 +129,14 @@
         }
 
         function clearOutput() {
-            outputElement.textContent = 'Your formatted text will appear here...';
+            outputElement.textContent = 'Your result will appear here...';
             copyBtn.disabled = true;
         }
 
         async function copyOutput() {
             const text = outputElement.textContent;
             
-            if (text === 'Your formatted text will appear here...') {
+            if (text === 'Your result will appear here...') {
                 showNotification('Nothing to copy', 'error');
                 return;
             }
@@ -108,10 +149,12 @@
             }
         }
 
-        // Allow Enter key to process text
+        // Allow Enter key shortcuts
         inputTextarea.addEventListener('keydown', function(e) {
             if (e.ctrlKey && e.key === 'Enter') {
-                processText();
+                encodeText();
+            } else if (e.ctrlKey && e.shiftKey && e.key === 'Enter') {
+                decodeText();
             }
         });
     </script>
